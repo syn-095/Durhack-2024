@@ -1,21 +1,35 @@
-import pygame, sys
+import pygame, sys, time
 from pygame.math import Vector2
-from rooms import room_1
+from rooms import rooms
 
 class Game:
     def __init__(self) -> None:
-        self.room_1 = room_1.Room1(screen, W, H)
-        self.room_2 = room_1.Room2(screen, W, H)
+        self.entrance = rooms.Entrance(screen, W, H)
+        self.room_1 = rooms.Room1(screen, W, H)
+        self.white_room = rooms.WhiteRoom(screen, W, H)
+        self.white_room_num = 3
         self.current_room = 1
 
     def update(self):
-        exit = False
+        room_variable = None
+        sleep_time = 0.2
+
         if self.current_room == 1:
-            exit = self.room_1.update()
+            room_variable = self.entrance.update()
+            if room_variable: time.sleep(sleep_time)
+
         elif self.current_room == 2: 
-            exit = self.room_2.update()
-        
-        if exit: self.current_room += 1
+            room_variable = self.room_1.update()
+            if room_variable: time.sleep(sleep_time)
+
+        elif self.current_room == self.white_room_num:
+            room_variable = self.white_room.update()
+
+        if room_variable == "back":  self.current_room -= 1
+        if room_variable == "next": self.current_room += 1
+
+        room_variable = None
+
 
 
 pygame.init()
@@ -31,6 +45,7 @@ game = Game()
 
 while True:
     for event in pygame.event.get():
+        # QUITTING OPTIONS:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
@@ -38,6 +53,10 @@ while True:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
                 sys.exit()
+        # ----------------------------
+        if game.current_room == game.white_room_num:
+            game.white_room.handle_events(event)
+        
     screen.fill('white')
 
     game.update()
