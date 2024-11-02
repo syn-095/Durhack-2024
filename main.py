@@ -24,11 +24,11 @@ class Game:
 
         elif self.current_room == self.white_room_num:
             room_variable = self.white_room.update()
+            print (room_variable)
+            if room_variable: time.sleep(sleep_time)
 
         if room_variable == "back":  self.current_room -= 1
         if room_variable == "next": self.current_room += 1
-
-        room_variable = None
 
 
 
