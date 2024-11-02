@@ -1,5 +1,15 @@
 import pygame, sys
 from pygame.math import Vector2
+from rooms import room_1
+
+class Main:
+    def __init__(self) -> None:
+        room_width, room_height = 100, 75
+
+        self.room_1 = room_1.Room1(room_width, room_height)
+
+
+
 
 pygame.init()
 
