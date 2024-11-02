@@ -17,13 +17,16 @@ class DefaultRoom:
             self.back_rect = self.back_txt.get_rect()
             self.back_rect.midbottom = (s_width/2, s_height - 60)
 
+            self.back_rect_hover = pygame.Rect(0,0,self.back_rect.width + 5, self.back_rect.height + 5)
+            self.back_rect_hover.center = self.back_rect.center
+
 class Entrance(DefaultRoom):
     def __init__(self, screen, s_width, s_height) -> None:
         super().__init__(screen, s_width, s_height, "ENTRANCE")
 
         self.nxt_room_txt = self.font.render("NEXT ROOM", True, 'black')
         self.nxt_room_rect = self.nxt_room_txt.get_rect()
-        self.nxt_room_rect.midbottom = (s_width/2, self.s_h/2)
+        self.nxt_room_rect.midbottom = (s_width/2, self.s_h/2)  
 
         self.hover_rect = pygame.Rect(0,0,self.nxt_room_rect.width + 5, self.nxt_room_rect.height + 5)
         self.hover_rect.center = self.nxt_room_rect.center
@@ -92,6 +95,9 @@ class WhiteRoom(DefaultRoom):
         self.nxt_room_rect = self.nxt_room_txt.get_rect()
         self.nxt_room_rect.center = (s_width / 2, s_height / 2)
 
+        self.hover_rect_next = pygame.Rect(0, 0, self.nxt_room_rect.width + 5, self.nxt_room_rect.height + 5)
+        self.hover_rect_next.center = self.nxt_room_rect.center
+
         self.white_sheet = pygame.Surface((self.nxt_room_rect.width + 10, self.nxt_room_rect.height + 10))
         self.white_sheet.fill((255, 255, 255))
         self.white_sheet_rect = self.white_sheet.get_rect()
@@ -103,13 +109,12 @@ class WhiteRoom(DefaultRoom):
         mouse_pos = pygame.mouse.get_pos()
 
         if self.back_rect.collidepoint(mouse_pos):
-            pygame.draw.rect(self.screen, 'grey', self.back_rect.inflate(5, 5), 0, 2)
+            pygame.draw.rect(self.screen, 'grey', self.back_rect_hover, 0, 2)
 
         if self.nxt_room_rect.collidepoint(mouse_pos):
-            pygame.draw.rect(self.screen, 'grey', self.nxt_room_rect, 0, 2)
+            pygame.draw.rect(self.screen, 'grey', self.hover_rect_next, 0, 2)
 
     def draw(self):
-        self.screen.fill((255, 255, 255))
         self.screen.blit(self.back_txt, self.back_rect)
         self.screen.blit(self.nxt_room_txt, self.nxt_room_rect)
         self.screen.blit(self.white_sheet, self.white_sheet_rect)
