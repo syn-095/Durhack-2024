@@ -70,11 +70,11 @@ class Room1(Entrance):
 
         if self.nxt_room_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_next, 0, 2)
-            if click: return "next"
+            if click: 
+                return "next"
 
         if self.back_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_back, 0, 2)
-            if click: return "back"
 
     def draw(self):
         self.screen.blit(self.room_number_text, self.room_number_rect)
@@ -107,17 +107,12 @@ class WhiteRoom(DefaultRoom):
 
     def hover_effect(self):
         mouse_pos = pygame.mouse.get_pos()
-        click = pygame.mouse.get_pressed()[0]
 
         if self.back_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.back_rect_hover, 0, 2)
-            if click: 
-                print ("clicking back")
-                return "back"
 
         if self.nxt_room_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_next, 0, 2)
-            if click: return "next"
 
     def draw(self):
         self.screen.blit(self.back_txt, self.back_rect)
@@ -126,10 +121,8 @@ class WhiteRoom(DefaultRoom):
 
     def update(self):
         self.drag()
-        room_variable = self.hover_effect()
+        self.hover_effect()
         self.draw()
-
-        return room_variable
 
     def drag(self):
         mouse_pos = pygame.mouse.get_pos()
@@ -148,5 +141,25 @@ class WhiteRoom(DefaultRoom):
             if event.button == 1:
                 self.dragging = False
 
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+# class WhiteRoom(DefaultRoom):
+#     def __init__(self,screen, s_width, s_height) -> None:
+#         super().__init__(screen, s_width, s_height, "", True)
+
+#         self.width, self.height = 40,40
+#         self.nxt_room_rect = pygame.Rect(0,0, self.width, self.height)
+#         self.nxt_room_rect.center = (s_width/2, s_height/2)
+
+#     def drag(self):
+
+#     def draw(self):
+#         pygame.draw.rect(self.screen, 'white', self.nxt_room_rect)
+        
+        
+#     def update(self):
+#         self.draw()
 
 
