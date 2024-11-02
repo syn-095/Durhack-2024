@@ -103,12 +103,11 @@ def create_window(width, height):
             
         
 
-
-
         pygame.display.flip()
         clock.tick(60)
 
     pygame.quit()
     sys.exit()
 
-create_window(800, 600)
+if __name__ == "__main__":
+    create_window(800, 600)
