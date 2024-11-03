@@ -418,7 +418,6 @@ class WindowRoom(DefaultRoom):
                 return "next"
 
     def draw(self):
-        print ('displaying window')
         self.screen.blit(self.window_img, self.window_rect)
         if not self.crowbar_picked: self.screen.blit(self.crowbar_img, self.crowbar_rect)
 
