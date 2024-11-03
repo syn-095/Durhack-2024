@@ -164,7 +164,7 @@ class ElementsRoom(DefaultRoom):
     def __init__(self, screen, s_width, s_height, room_name):
         super().__init__(screen, s_width, s_height, room_name=room_name, no_next_room=True)
 
-        self.elements = ["Re", "N", "Li", "Ni", "He"]
+        self.elements = ["Be", "N", "Li", "Ni", "He"]
 
         self.elements_rects = []
         for index, element in enumerate(self.elements):
@@ -181,6 +181,14 @@ class ElementsRoom(DefaultRoom):
         self.periodic_img = pygame.image.load("Images/periodic_table.jpg")
         self.periodic_img = pygame.transform.scale(self.periodic_img, (500, 250))
         self.periodic_rect = self.periodic_img.get_rect(center=(self.s_w/2, self.s_h/2 - 175))
+
+        self.door_img = pygame.image.load("Images/door.png")
+        self.door_img = pygame.transform.scale(self.door_img, (150, 300))
+        self.door_rect = self.door_img.get_rect(center = (self.s_w/5, self.s_h/2))
+
+        self.barricade_img = pygame.image.load("Images/Door_barricade.png")
+        self.barricade_img = pygame.transform.scale(self.barricade_img, (150, 300))
+        self.barricade_rect = self.door_img.get_rect(center = (self.s_w/5, self.s_h/2))
 
         self.clicked_lock = False
         self.dragging = False
@@ -207,6 +215,9 @@ class ElementsRoom(DefaultRoom):
         self.screen.blit(self.back_txt, self.back_rect)
         self.screen.blit(self.lock_img, self.lock_rect)
         self.screen.blit(self.periodic_img, self.periodic_rect)
+
+        self.screen.blit(self.door_img, self.door_rect)
+        self.screen.blit(self.barricade_img, self.barricade_rect)
 
         for element in self.elements_rects:
             self.screen.blit(element[0], element[1])
@@ -380,4 +391,8 @@ class KeyRoom(DefaultRoom):
                 elif box['down_rect'].collidepoint(event.pos):
                     self.current_images[i] = (self.current_images[i] - 1) % len(self.images[i])
 
+class WindowRoom(DefaultRoom):
+    def __init__(self, screen, s_width, s_height, room_name: str, no_room_display=False, no_room_back=False, no_next_room=False):
+        super().__init__(screen, s_width, s_height, room_name, no_room_display, no_room_back, no_next_room)
 
+        self.window_img = pygame.image.load()
