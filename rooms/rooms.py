@@ -180,7 +180,7 @@ class ElementsRoom(DefaultRoom):
         self.keypad = keypad.Keypad((self.s_w/2 - 45, self.s_h*2/3 + 20), 100, 100, self.screen)
 
         self.periodic_img = pygame.image.load("Images/periodic_table.jpg")
-        self.periodic_img = pygame.transform.scale(self.periodic_img, (500, 250))
+        self.periodic_img = pygame.transform.scale(self.periodic_img, (1000,500))
         self.periodic_rect = self.periodic_img.get_rect(center=(self.s_w/2, self.s_h/2 - 175))
 
         self.clicked_lock = False
