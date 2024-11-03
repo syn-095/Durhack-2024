@@ -165,7 +165,7 @@ class ElementsRoom(DefaultRoom):
     def __init__(self, screen, s_width, s_height, room_name):
         super().__init__(screen, s_width, s_height, room_name=room_name, no_next_room=True)
 
-        self.elements = ["Re", "N", "Li", "Ni", "He"]
+        self.elements = ["Be", "N", "Li", "Ni", "He"]
 
         self.elements_rects = []
         for index, element in enumerate(self.elements):
