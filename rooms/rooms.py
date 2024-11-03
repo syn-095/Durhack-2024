@@ -114,7 +114,6 @@ class WhiteRoom(DefaultRoom):
         click = pygame.mouse.get_pressed()[0]
         def check_nxt_discovered():
             if self.dragging or (self.white_sheet_rect.right >= self.nxt_room_rect.right and self.white_sheet_rect.left <= self.nxt_room_rect.left and self.white_sheet_rect.bottom >= self.nxt_room_rect.bottom and self.white_sheet_rect.top <= self.nxt_room_rect.top): 
-                print ("no click")
                 return False
             else: return True
 
@@ -329,13 +328,15 @@ class KeyRoom(DefaultRoom):
             if self.current_images == [0,3,1]: 
                 self.left_door_open = True
                 self.left_door_img = pygame.image.load("Images/Open_door.png")
-                self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 350))
+                self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 360))
 
         click = pygame.mouse.get_pressed()[0]
         if self.create_key_hover.collidepoint(pygame.mouse.get_pos()):
-            print(f"{self.left_door_open}, {self.current_images}")
             pygame.draw.rect(self.screen, 'grey', self.create_key_hover, 0, 2)
             if click and check_key_combination(): self.left_door_open = True
+        
+        if self.left_door_rect.collidepoint(pygame.mouse.get_pos()) and self.left_door_open:
+            if click: return "next"
 
     def draw(self):
         if self.left_door_open: self.screen.blit(self.fixed_key_img, self.fixed_key_rect)
@@ -365,8 +366,10 @@ class KeyRoom(DefaultRoom):
 
 
     def update(self):
-        self.hover_effect()
+        room_variable = self.hover_effect()
         self.draw()
+
+        return room_variable
 
     def handle_events(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -376,26 +379,5 @@ class KeyRoom(DefaultRoom):
                     self.current_images[i] = (self.current_images[i] + 1) % len(self.images[i])
                 elif box['down_rect'].collidepoint(event.pos):
                     self.current_images[i] = (self.current_images[i] - 1) % len(self.images[i])
-
-
-if False:
-    class KeyRoom(DefaultRoom):
-        def __init__(self, screen, s_width, s_height, no_room_display=True, no_room_back=True, no_next_room=True):
-            super().__init__(screen, s_width, s_height, "", no_room_display, no_room_back, no_next_room)
-            
-            self.broken_key_img = pygame.image.load("Images/Keys/Key_Broken.png")
-            self.broken_key_img = pygame.transform.scale(self.broken_key_img, (50,50))
-            self.broken_key_rect = self.broken_key_img.get_rect(midbottom = (self.s_w/2, self.s_h - 40))
-
-            self.right_door_img = pygame.image.load("Images/door.png")
-            self.right_door_img = pygame.transform.scale(self.right_door_img, (300,350))
-            self.right_door_rect = self.right_door_img.get_rect(center  = (self.s_w*3/4, self.s_h/2))
-
-        def draw(self):
-            self.screen.blit(self.broken_key_img, self.broken_key_rect)
-            self.screen.blit(self.right_door_img, self.right_door_rect)
-
-        def update(self):
-            self.draw()
 
 
