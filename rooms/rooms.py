@@ -165,6 +165,7 @@ class ElementsRoom(DefaultRoom):
         super().__init__(screen, s_width, s_height, room_name=room_name, no_next_room=True)
 
         self.elements = ["Be", "N", "Li", "Ni", "He"]
+        self.elements = ["Be", "N", "Li", "Ni", "He"]
 
         self.elements_rects = []
         for index, element in enumerate(self.elements):
@@ -210,6 +211,9 @@ class ElementsRoom(DefaultRoom):
     def draw(self):
         if self.clicked_lock:
             self.keypad.draw()
+
+        for element in self.elements_rects:
+            self.screen.blit(element[0], element[1])
 
         self.screen.blit(self.room_number_text, self.room_number_rect)
         self.screen.blit(self.back_txt, self.back_rect)
@@ -262,39 +266,7 @@ class ElementsRoom(DefaultRoom):
             if self.dragging and self.dragged_element is not None:
                 self.drag()
 
-class KeyRoom(DefaultRoom):
-    def __init__(self, screen, s_width, s_height, no_room_display=True, no_room_back=True, no_next_room=True):
-        super().__init__(screen, s_width, s_height, "", no_room_display, no_room_back, no_next_room)
-        
-        self.left_door_open = False
-
-        if True: # CREATING ALL IMAGES VARIABLES
-            self.broken_key_img = pygame.image.load("Images/Keys/Key_Broken.png")
-            self.broken_key_img = pygame.transform.scale(self.broken_key_img, (150, 150))
-            self.broken_key_rect = self.broken_key_img.get_rect(midbottom=(self.s_w / 2, self.s_h - 40))
-
-            self.fixed_key_img = pygame.image.load("Images/Keys/Key_Fixed.png")
-            self.fixed_key_img = pygame.transform.scale(self.fixed_key_img, (150, 150))
-            self.fixed_key_rect = self.fixed_key_img.get_rect(midtop=(self.s_w / 2, 40))
-
-            # RIGHT DOOR
-            self.right_door_img = pygame.image.load("Images/door.png")
-            self.right_door_img = pygame.transform.scale(self.right_door_img, (200, 350))
-            self.right_door_rect = self.right_door_img.get_rect(center=(self.s_w * 3 / 4, self.s_h / 2))
-
-            self.right_door_lock_img = pygame.image.load("Images/lock.png")
-            self.right_door_lock_img = pygame.transform.scale(self.right_door_lock_img, (25, 25))
-            self.right_door_lock = self.right_door_lock_img.get_rect(midleft=(self.right_door_rect.left, self.right_door_rect.centery))
-
-            # LEFT DOOR
-            self.left_door_img = pygame.image.load("Images/door.png")
-            self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 350))
-            self.left_door_rect = self.left_door_img.get_rect(center=(self.s_w/4, self.s_h / 2))
-
-            self.left_door_lock_img = pygame.image.load("Images/lock.png")
-            self.left_door_lock_img = pygame.transform.scale(self.left_door_lock_img, (25,25))
-            self.left_door_lock = self.left_door_lock_img.get_rect(midleft=(self.left_door_rect.left, self.left_door_rect.centery))
-            # ------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------
 
             self.create_key_txt = self.font.render("create key", True, "black")
             self.create_key_rect = self.create_key_txt.get_rect(center = (self.s_w/2, self.s_h/2 + 120))
