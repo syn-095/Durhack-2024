@@ -179,6 +179,10 @@ class ElementsRoom(DefaultRoom):
 
         self.keypad = keypad.Keypad((self.s_w/2 - 45, self.s_h*2/3 + 20), 100, 100, self.screen)
 
+        self.periodic_img = pygame.image.load("Images/periodic_table.jpg")
+        self.periodic_img = pygame.transform.scale(self.periodic_img, (500, 250))
+        self.periodic_rect = self.periodic_img.get_rect(center=(self.s_w/2, self.s_h/2 - 175))
+
         self.clicked_lock = False
         self.dragging = False
         self.dragged_element = None
@@ -200,12 +204,13 @@ class ElementsRoom(DefaultRoom):
         if self.clicked_lock:
             self.keypad.draw()
 
-        for element in self.elements_rects:
-            self.screen.blit(element[0], element[1])
-
         self.screen.blit(self.room_number_text, self.room_number_rect)
         self.screen.blit(self.back_txt, self.back_rect)
         self.screen.blit(self.lock_img, self.lock_rect)
+        self.screen.blit(self.periodic_img, self.periodic_rect)
+
+        for element in self.elements_rects:
+            self.screen.blit(element[0], element[1])
 
     def update(self):
         room_variation = self.hover_effect()
@@ -247,23 +252,132 @@ class ElementsRoom(DefaultRoom):
             if self.dragging and self.dragged_element is not None:
                 self.drag()
 
-# ----------------------------------------------------------------------------------------------------------------------
+class KeyRoom(DefaultRoom):
+    def __init__(self, screen, s_width, s_height, no_room_display=True, no_room_back=True, no_next_room=True):
+        super().__init__(screen, s_width, s_height, "", no_room_display, no_room_back, no_next_room)
 
-# class WhiteRoom(DefaultRoom):
-#     def __init__(self,screen, s_width, s_height) -> None:
-#         super().__init__(screen, s_width, s_height, "", True)
+        self.broken_key_img = pygame.image.load("Images/Keys/Key_Broken.png")
+        self.broken_key_img = pygame.transform.scale(self.broken_key_img, (150, 150))
+        self.broken_key_rect = self.broken_key_img.get_rect(midbottom=(self.s_w / 2, self.s_h - 40))
 
-#         self.width, self.height = 40,40
-#         self.nxt_room_rect = pygame.Rect(0,0, self.width, self.height)
-#         self.nxt_room_rect.center = (s_width/2, s_height/2)
+        # RIGHT DOOR
+        self.right_door_img = pygame.image.load("Images/door.png")
+        self.right_door_img = pygame.transform.scale(self.right_door_img, (200, 350))
+        self.right_door_rect = self.right_door_img.get_rect(center=(self.s_w * 3 / 4, self.s_h / 2))
 
-#     def drag(self):
+        self.right_door_lock_img = pygame.image.load("Images/lock.png")
+        self.right_door_lock_img = pygame.transform.scale(self.right_door_lock_img, (25, 25))
+        self.right_door_lock = self.right_door_lock_img.get_rect(midleft=(self.right_door_rect.left, self.right_door_rect.centery))
 
-#     def draw(self):
-#         pygame.draw.rect(self.screen, 'white', self.nxt_room_rect)
-        
-        
-#     def update(self):
-#         self.draw()
+        # LEFT DOOR
+        self.left_door_img = pygame.image.load("Images/door.png")
+        self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 350))
+        self.left_door_rect = self.left_door_img.get_rect(center=(self.s_w/4, self.s_h / 2))
+
+        self.left_door_lock_img = pygame.image.load("Images/lock.png")
+        self.left_door_lock_img = pygame.transform.scale(self.left_door_lock_img, (25,25))
+        self.left_door_lock = self.left_door_lock_img.get_rect(midleft=(self.left_door_rect.left, self.left_door_rect.centery))
+        # ------------------------------------------------
+
+        self.create_key_txt = self.font.render("create key", True, "black")
+        self.create_key_rect = self.create_key_txt.get_rect(center = (self.s_w/2, self.s_h/2 + 120))
+        self.create_key_hover = pygame.Rect(0,0,self.create_key_rect.width + 5, self.create_key_rect.height + 5)
+        self.create_key_hover.center = self.create_key_rect.center 
+
+        self.boxes = [self.create_box((self.s_w / 2 - 150, self.s_h / 2)),
+                      self.create_box((self.s_w / 2, self.s_h / 2)),
+                      self.create_box((self.s_w / 2 + 150, self.s_h / 2))]
+
+        self.current_images = [0, 0, 0]  # indexes for the current images being displayed
+        self.images = [
+            [pygame.transform.scale(pygame.image.load(f"Images/Keys/set1/P{i + 1}.png"), (200, 200)) for i in range(4)],
+            [pygame.transform.scale(pygame.image.load(f"Images/Keys/set2/P{i + 1}.png"), (200, 200)) for i in range(4)],
+            [pygame.transform.scale(pygame.image.load(f"Images/Keys/set3/P{i + 1}.png"), (200, 200)) for i in range(4)]
+        ]
+
+    def create_box(self, center_pos):
+        box = pygame.Surface((100, 100))  # Adjusted to fit arrows and images
+        box.fill('white')
+        box_rect = box.get_rect(center=center_pos)
+
+        up_arrow = pygame.image.load("Images/arrows/arrow_smaller_up.png")
+        up_arrow = pygame.transform.scale(up_arrow, (40, 35))
+        up_arrow_rect = up_arrow.get_rect(midbottom=(box_rect.midtop))
+
+        down_arrow = pygame.image.load("Images/arrows/arrow_smaller.png")
+        down_arrow = pygame.transform.scale(down_arrow, (40, 35))
+        down_arrow_rect = down_arrow.get_rect(midtop=(box_rect.midbottom))
+
+        return {
+            'box': box,
+            'rect': box_rect,
+            'up_arrow': up_arrow,
+            'up_rect': up_arrow_rect,
+            'down_arrow': down_arrow,
+            'down_rect': down_arrow_rect
+        }
+
+    def hover_effect(self):
+        if self.create_key_hover.collidepoint(pygame.mouse.get_pos()):
+            pygame.draw.rect(self.screen, 'grey', self.create_key_hover, 0, 2)
+
+    def draw(self):
+        self.screen.blit(self.broken_key_img, self.broken_key_rect)
+
+        self.screen.blit(self.right_door_img, self.right_door_rect)
+        self.screen.blit(self.right_door_lock_img, self.right_door_lock)
+
+        self.screen.blit(self.left_door_img, self.left_door_rect)
+        self.screen.blit(self.left_door_lock_img, self.left_door_lock)
+
+        self.screen.blit(self.create_key_txt, self.create_key_rect)
+
+        for i, box in enumerate(self.boxes):
+            self.screen.blit(box['box'], box['rect'])
+            
+            image = self.images[i][self.current_images[i]]
+            image_rect = image.get_rect(center=box['rect'].center)
+            self.screen.blit(image, image_rect)
+
+            # self.screen.blit(box['up_arrow'], box['up_rect'])
+            # self.screen.blit(box['down_arrow'], box['down_rect'])
+
+            self.screen.blit(box['up_arrow'], box['up_rect'])
+            self.screen.blit(box['down_arrow'], box['down_rect'])
+
+
+    def update(self):
+        self.hover_effect()
+        self.draw()
+
+    def handle_events(self, event):
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for i, box in enumerate(self.boxes):
+
+                if box['up_rect'].collidepoint(event.pos):
+                    self.current_images[i] = (self.current_images[i] - 1) % len(self.images[i])
+                elif box['down_rect'].collidepoint(event.pos):
+                    self.current_images[i] = (self.current_images[i] + 1) % len(self.images[i])
+
+
+if False:
+    class KeyRoom(DefaultRoom):
+        def __init__(self, screen, s_width, s_height, no_room_display=True, no_room_back=True, no_next_room=True):
+            super().__init__(screen, s_width, s_height, "", no_room_display, no_room_back, no_next_room)
+            
+            self.broken_key_img = pygame.image.load("Images/Keys/Key_Broken.png")
+            self.broken_key_img = pygame.transform.scale(self.broken_key_img, (50,50))
+            self.broken_key_rect = self.broken_key_img.get_rect(midbottom = (self.s_w/2, self.s_h - 40))
+
+            self.right_door_img = pygame.image.load("Images/door.png")
+            self.right_door_img = pygame.transform.scale(self.right_door_img, (300,350))
+            self.right_door_rect = self.right_door_img.get_rect(center  = (self.s_w*3/4, self.s_h/2))
+
+        def draw(self):
+            self.screen.blit(self.broken_key_img, self.broken_key_rect)
+            self.screen.blit(self.right_door_img, self.right_door_rect)
+
+        def update(self):
+            self.draw()
 
 
