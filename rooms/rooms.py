@@ -81,11 +81,11 @@ class Room1(Entrance):
 
         if self.nxt_room_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_next, 0, 2)
-            if click: return "next"
+            if click: 
+                return "next"
 
         if self.back_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_back, 0, 2)
-            if click: return "back"
 
     def draw(self):
         self.screen.blit(self.room_number_text, self.room_number_rect)
@@ -113,7 +113,9 @@ class WhiteRoom(DefaultRoom):
         mouse_pos = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()[0]
         def check_nxt_discovered():
-            if self.dragging or self.white_sheet_rect.right >= self.nxt_room_rect.right and self.white_sheet_rect.left <= self.nxt_room_rect.left and self.white_sheet_rect.bottom >= self.nxt_room_rect.bottom and self.white_sheet_rect.top <= self.nxt_room_rect.top: return False
+            if self.dragging or (self.white_sheet_rect.right >= self.nxt_room_rect.right and self.white_sheet_rect.left <= self.nxt_room_rect.left and self.white_sheet_rect.bottom >= self.nxt_room_rect.bottom and self.white_sheet_rect.top <= self.nxt_room_rect.top): 
+                print ("no click")
+                return False
             else: return True
 
         if self.back_rect.collidepoint(mouse_pos):
@@ -123,6 +125,12 @@ class WhiteRoom(DefaultRoom):
         if self.nxt_room_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_next, 0, 2)
             if click and check_nxt_discovered(): return "next"
+
+        if self.back_rect.collidepoint(mouse_pos):
+            pygame.draw.rect(self.screen, 'grey', self.back_rect_hover, 0, 2)
+
+        if self.nxt_room_rect.collidepoint(mouse_pos):
+            pygame.draw.rect(self.screen, 'grey', self.hover_rect_next, 0, 2)
 
     def draw(self):
         self.screen.blit(self.back_txt, self.back_rect)
@@ -238,4 +246,24 @@ class ElementsRoom(DefaultRoom):
         elif event.type == pygame.MOUSEMOTION:
             if self.dragging and self.dragged_element is not None:
                 self.drag()
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+# class WhiteRoom(DefaultRoom):
+#     def __init__(self,screen, s_width, s_height) -> None:
+#         super().__init__(screen, s_width, s_height, "", True)
+
+#         self.width, self.height = 40,40
+#         self.nxt_room_rect = pygame.Rect(0,0, self.width, self.height)
+#         self.nxt_room_rect.center = (s_width/2, s_height/2)
+
+#     def drag(self):
+
+#     def draw(self):
+#         pygame.draw.rect(self.screen, 'white', self.nxt_room_rect)
+        
+        
+#     def update(self):
+#         self.draw()
+
 
