@@ -63,8 +63,8 @@ screen_info = pygame.display.Info()
 
 W, H = screen_info.current_w - 20, screen_info.current_h - 100
 
-screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN) #=> fullscreen window
-# screen = pygame.display.set_mode((W,H))
+# screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN) #=> fullscreen window
+screen = pygame.display.set_mode((W,H))
 
 game = Game()
 
