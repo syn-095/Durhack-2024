@@ -14,7 +14,7 @@ class Game:
         self.elements_room_num = 4
         self.key_room_num = 5
 
-        self.current_room = 4
+        self.current_room = 1
 
     def update(self):
         room_variable = None
