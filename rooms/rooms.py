@@ -165,7 +165,7 @@ class ElementsRoom(DefaultRoom):
     def __init__(self, screen, s_width, s_height, room_name):
         super().__init__(screen, s_width, s_height, room_name=room_name, no_next_room=True)
 
-        self.elements = ["Be", "N", "Li", "Ni", "He"]
+        self.elements = ["Re", "N", "Li", "Ni", "He"]
 
         self.elements_rects = []
         for index, element in enumerate(self.elements):
@@ -255,45 +255,52 @@ class ElementsRoom(DefaultRoom):
 class KeyRoom(DefaultRoom):
     def __init__(self, screen, s_width, s_height, no_room_display=True, no_room_back=True, no_next_room=True):
         super().__init__(screen, s_width, s_height, "", no_room_display, no_room_back, no_next_room)
+        
+        self.left_door_open = False
 
-        self.broken_key_img = pygame.image.load("Images/Keys/Key_Broken.png")
-        self.broken_key_img = pygame.transform.scale(self.broken_key_img, (150, 150))
-        self.broken_key_rect = self.broken_key_img.get_rect(midbottom=(self.s_w / 2, self.s_h - 40))
+        if True: # CREATING ALL IMAGES VARIABLES
+            self.broken_key_img = pygame.image.load("Images/Keys/Key_Broken.png")
+            self.broken_key_img = pygame.transform.scale(self.broken_key_img, (150, 150))
+            self.broken_key_rect = self.broken_key_img.get_rect(midbottom=(self.s_w / 2, self.s_h - 40))
 
-        # RIGHT DOOR
-        self.right_door_img = pygame.image.load("Images/door.png")
-        self.right_door_img = pygame.transform.scale(self.right_door_img, (200, 350))
-        self.right_door_rect = self.right_door_img.get_rect(center=(self.s_w * 3 / 4, self.s_h / 2))
+            self.fixed_key_img = pygame.image.load("Images/Keys/Key_Fixed.png")
+            self.fixed_key_img = pygame.transform.scale(self.fixed_key_img, (150, 150))
+            self.fixed_key_rect = self.fixed_key_img.get_rect(midtop=(self.s_w / 2, 40))
 
-        self.right_door_lock_img = pygame.image.load("Images/lock.png")
-        self.right_door_lock_img = pygame.transform.scale(self.right_door_lock_img, (25, 25))
-        self.right_door_lock = self.right_door_lock_img.get_rect(midleft=(self.right_door_rect.left, self.right_door_rect.centery))
+            # RIGHT DOOR
+            self.right_door_img = pygame.image.load("Images/door.png")
+            self.right_door_img = pygame.transform.scale(self.right_door_img, (200, 350))
+            self.right_door_rect = self.right_door_img.get_rect(center=(self.s_w * 3 / 4, self.s_h / 2))
 
-        # LEFT DOOR
-        self.left_door_img = pygame.image.load("Images/door.png")
-        self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 350))
-        self.left_door_rect = self.left_door_img.get_rect(center=(self.s_w/4, self.s_h / 2))
+            self.right_door_lock_img = pygame.image.load("Images/lock.png")
+            self.right_door_lock_img = pygame.transform.scale(self.right_door_lock_img, (25, 25))
+            self.right_door_lock = self.right_door_lock_img.get_rect(midleft=(self.right_door_rect.left, self.right_door_rect.centery))
 
-        self.left_door_lock_img = pygame.image.load("Images/lock.png")
-        self.left_door_lock_img = pygame.transform.scale(self.left_door_lock_img, (25,25))
-        self.left_door_lock = self.left_door_lock_img.get_rect(midleft=(self.left_door_rect.left, self.left_door_rect.centery))
-        # ------------------------------------------------
+            # LEFT DOOR
+            self.left_door_img = pygame.image.load("Images/door.png")
+            self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 350))
+            self.left_door_rect = self.left_door_img.get_rect(center=(self.s_w/4, self.s_h / 2))
 
-        self.create_key_txt = self.font.render("create key", True, "black")
-        self.create_key_rect = self.create_key_txt.get_rect(center = (self.s_w/2, self.s_h/2 + 120))
-        self.create_key_hover = pygame.Rect(0,0,self.create_key_rect.width + 5, self.create_key_rect.height + 5)
-        self.create_key_hover.center = self.create_key_rect.center 
+            self.left_door_lock_img = pygame.image.load("Images/lock.png")
+            self.left_door_lock_img = pygame.transform.scale(self.left_door_lock_img, (25,25))
+            self.left_door_lock = self.left_door_lock_img.get_rect(midleft=(self.left_door_rect.left, self.left_door_rect.centery))
+            # ------------------------------------------------
 
-        self.boxes = [self.create_box((self.s_w / 2 - 150, self.s_h / 2)),
-                      self.create_box((self.s_w / 2, self.s_h / 2)),
-                      self.create_box((self.s_w / 2 + 150, self.s_h / 2))]
+            self.create_key_txt = self.font.render("create key", True, "black")
+            self.create_key_rect = self.create_key_txt.get_rect(center = (self.s_w/2, self.s_h/2 + 120))
+            self.create_key_hover = pygame.Rect(0,0,self.create_key_rect.width + 5, self.create_key_rect.height + 5)
+            self.create_key_hover.center = self.create_key_rect.center 
 
-        self.current_images = [0, 0, 0]  # indexes for the current images being displayed
-        self.images = [
-            [pygame.transform.scale(pygame.image.load(f"Images/Keys/set1/P{i + 1}.png"), (200, 200)) for i in range(4)],
-            [pygame.transform.scale(pygame.image.load(f"Images/Keys/set2/P{i + 1}.png"), (200, 200)) for i in range(4)],
-            [pygame.transform.scale(pygame.image.load(f"Images/Keys/set3/P{i + 1}.png"), (200, 200)) for i in range(4)]
-        ]
+            self.boxes = [self.create_box((self.s_w / 2 - 150, self.s_h / 2)),
+                        self.create_box((self.s_w / 2, self.s_h / 2)),
+                        self.create_box((self.s_w / 2 + 150, self.s_h / 2))]
+
+            self.current_images = [0, 0, 0]  # indexes for the current images being displayed
+            self.images = [
+                [pygame.transform.scale(pygame.image.load(f"Images/Keys/set1/P{i + 1}.png"), (200, 200)) for i in range(4)],
+                [pygame.transform.scale(pygame.image.load(f"Images/Keys/set2/P{i + 1}.png"), (200, 200)) for i in range(4)],
+                [pygame.transform.scale(pygame.image.load(f"Images/Keys/set3/P{i + 1}.png"), (200, 200)) for i in range(4)]
+            ]
 
     def create_box(self, center_pos):
         box = pygame.Surface((100, 100))  # Adjusted to fit arrows and images
@@ -318,17 +325,28 @@ class KeyRoom(DefaultRoom):
         }
 
     def hover_effect(self):
+        def check_key_combination():
+            if self.current_images == [0,3,1]: 
+                self.left_door_open = True
+                self.left_door_img = pygame.image.load("Images/Open_door.png")
+                self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 350))
+
+        click = pygame.mouse.get_pressed()[0]
         if self.create_key_hover.collidepoint(pygame.mouse.get_pos()):
+            print(f"{self.left_door_open}, {self.current_images}")
             pygame.draw.rect(self.screen, 'grey', self.create_key_hover, 0, 2)
+            if click and check_key_combination(): self.left_door_open = True
 
     def draw(self):
+        if self.left_door_open: self.screen.blit(self.fixed_key_img, self.fixed_key_rect)
         self.screen.blit(self.broken_key_img, self.broken_key_rect)
 
         self.screen.blit(self.right_door_img, self.right_door_rect)
         self.screen.blit(self.right_door_lock_img, self.right_door_lock)
 
         self.screen.blit(self.left_door_img, self.left_door_rect)
-        self.screen.blit(self.left_door_lock_img, self.left_door_lock)
+        if not self.left_door_open:
+            self.screen.blit(self.left_door_lock_img, self.left_door_lock)
 
         self.screen.blit(self.create_key_txt, self.create_key_rect)
 
@@ -355,9 +373,9 @@ class KeyRoom(DefaultRoom):
             for i, box in enumerate(self.boxes):
 
                 if box['up_rect'].collidepoint(event.pos):
-                    self.current_images[i] = (self.current_images[i] - 1) % len(self.images[i])
-                elif box['down_rect'].collidepoint(event.pos):
                     self.current_images[i] = (self.current_images[i] + 1) % len(self.images[i])
+                elif box['down_rect'].collidepoint(event.pos):
+                    self.current_images[i] = (self.current_images[i] - 1) % len(self.images[i])
 
 
 if False:
