@@ -9,12 +9,16 @@ class Game:
         self.white_room = rooms.WhiteRoom(screen, W, H)
         self.elements_room = rooms.ElementsRoom(screen, W, H, "002")
         self.key_room = rooms.KeyRoom(screen, W, H)
+        self.window_room = rooms.WindowRoom(screen, W, H, "100")
+        self.window_end = rooms.Window_end(screen, W, H)
 
         self.white_room_num = 3
         self.elements_room_num = 4
         self.key_room_num = 5
+        self.window_room_num = 6
+        self.window_end_num = self.window_room_num + 1
 
-        self.current_room = 4
+        self.current_room = 1
 
     def update(self):
         room_variable = None
@@ -38,6 +42,14 @@ class Game:
 
         elif self.current_room == self.key_room_num:
             room_variable = self.key_room.update()
+            if room_variable: time.sleep(sleep_time)
+
+        elif self.current_room == self.window_room_num:
+            room_variable = self.window_room.update()
+            if room_variable: time.sleep(sleep_time)
+
+        elif self.current_room == self.window_end_num:
+            room_variable = self.window_end.update()
             if room_variable: time.sleep(sleep_time)
 
         if room_variable == "back":  self.current_room -= 1

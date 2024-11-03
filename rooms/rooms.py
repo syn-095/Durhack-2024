@@ -164,16 +164,7 @@ class ElementsRoom(DefaultRoom):
     def __init__(self, screen, s_width, s_height, room_name):
         super().__init__(screen, s_width, s_height, room_name=room_name, no_next_room=True)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-        self.elements = ["Be", "N", "Li", "Ni", "He"]
-        self.elements = ["Be", "N", "Li", "Ni", "He"]
-=======
         self.elements = ["Re", "N", "Li", "Ni", "He"]
->>>>>>> parent of daf616c (barricade door)
-=======
-        self.elements = ["Be", "N", "Li", "Ni", "He"]
->>>>>>> daf616c (barricade door)
 
         self.elements_rects = []
         for index, element in enumerate(self.elements):
@@ -274,8 +265,40 @@ class ElementsRoom(DefaultRoom):
             if self.dragging and self.dragged_element is not None:
                 self.drag()
 
-# ----------------------------------------------------------------------------------------------------------------------
+class KeyRoom(DefaultRoom):
+    def __init__(self, screen, s_width, s_height, no_room_display=True, no_room_back=True, no_next_room=True):
+        super().__init__(screen, s_width, s_height, "", no_room_display, no_room_back, no_next_room)
+        
+        self.left_door_open = False
 
+        if True: # CREATING ALL IMAGES VARIABLES
+            self.broken_key_img = pygame.image.load("Images/Keys/Key_Broken.png")
+            self.broken_key_img = pygame.transform.scale(self.broken_key_img, (150, 150))
+            self.broken_key_rect = self.broken_key_img.get_rect(midbottom=(self.s_w / 2, self.s_h - 40))
+
+            self.fixed_key_img = pygame.image.load("Images/Keys/Key_Fixed.png")
+            self.fixed_key_img = pygame.transform.scale(self.fixed_key_img, (150, 150))
+            self.fixed_key_rect = self.fixed_key_img.get_rect(midtop=(self.s_w / 2, 40))
+
+            # RIGHT DOOR
+            self.right_door_img = pygame.image.load("Images/door.png")
+            self.right_door_img = pygame.transform.scale(self.right_door_img, (200, 350))
+            self.right_door_rect = self.right_door_img.get_rect(center=(self.s_w * 3 / 4, self.s_h / 2))
+
+            self.right_door_lock_img = pygame.image.load("Images/lock.png")
+            self.right_door_lock_img = pygame.transform.scale(self.right_door_lock_img, (25, 25))
+            self.right_door_lock = self.right_door_lock_img.get_rect(midleft=(self.right_door_rect.left, self.right_door_rect.centery))
+
+            # LEFT DOOR
+            self.left_door_img = pygame.image.load("Images/door.png")
+            self.left_door_img = pygame.transform.scale(self.left_door_img, (200, 350))
+            self.left_door_rect = self.left_door_img.get_rect(center=(self.s_w/4, self.s_h / 2))
+
+            self.left_door_lock_img = pygame.image.load("Images/lock.png")
+            self.left_door_lock_img = pygame.transform.scale(self.left_door_lock_img, (25,25))
+            self.left_door_lock = self.left_door_lock_img.get_rect(midleft=(self.left_door_rect.left, self.left_door_rect.centery))
+
+ 
             self.create_key_txt = self.font.render("create key", True, "black")
             self.create_key_rect = self.create_key_txt.get_rect(center = (self.s_w/2, self.s_h/2 + 120))
             self.create_key_hover = pygame.Rect(0,0,self.create_key_rect.width + 5, self.create_key_rect.height + 5)
@@ -375,4 +398,47 @@ class WindowRoom(DefaultRoom):
     def __init__(self, screen, s_width, s_height, room_name: str, no_room_display=False, no_room_back=False, no_next_room=False):
         super().__init__(screen, s_width, s_height, room_name, no_room_display, no_room_back, no_next_room)
 
-        self.window_img = pygame.image.load()
+        self.window_img = pygame.image.load("Images/Window.png")
+        self.window_img = pygame.transform.scale(self.window_img, (300, 300))
+        self.window_rect = self.window_img.get_rect(center = (self.s_w/2, self.s_h/2 - 200))
+
+        self.crowbar_img = pygame.image.load("Images/Crowbar.png")
+        self.crowbar_img = pygame.transform.scale(self.crowbar_img, (300, 300))
+        self.crowbar_rect = self.crowbar_img.get_rect(midbottom = (self.s_w/2, self.s_h))
+
+        self.crowbar_picked = False
+
+    def hover(self):
+        if self.crowbar_rect.collidepoint(pygame.mouse.get_pos()):
+            if pygame.mouse.get_pressed()[0]:
+                self.crowbar_picked = True
+
+        if self.window_rect.collidepoint(pygame.mouse.get_pos()):
+            if pygame.mouse.get_pressed()[0] and self.crowbar_picked:
+                return "next"
+
+    def draw(self):
+        print ('displaying window')
+        self.screen.blit(self.window_img, self.window_rect)
+        if not self.crowbar_picked: self.screen.blit(self.crowbar_img, self.crowbar_rect)
+
+
+    def update(self):
+        room_variable = self.hover()
+        self.draw()
+
+        return room_variable
+
+class Window_end(DefaultRoom):
+    def __init__(self, screen, s_width, s_height,  no_room_display=True, no_room_back=True, no_next_room=True):
+        super().__init__(screen, s_width, s_height, "", no_room_display, no_room_back, no_next_room)
+
+        self.end_txt = self.font.render("YOU HAVE ESCAPED!", True, 'black')
+        self.end_rect = self.end_txt.get_rect(center = (self.s_w/2, self.s_h/2))
+
+    def draw(self):
+        self.screen.blit(self.end_txt, self.end_rect)
+
+    def update(self):
+        self.draw()
+
