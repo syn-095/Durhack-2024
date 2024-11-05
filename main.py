@@ -22,7 +22,7 @@ class Game:
 
     def update(self):
         room_variable = None
-        sleep_time = 0.2
+        sleep_time = 0.3
 
         if self.current_room == 1:
             room_variable = self.entrance.update()

@@ -179,8 +179,8 @@ class ElementsRoom(DefaultRoom):
         self.keypad = keypad.Keypad((self.s_w/2 - 45, self.s_h*2/3 + 20), 100, 100, self.screen)
 
         self.periodic_img = pygame.image.load("Images/periodic_table.jpg")
-        self.periodic_img = pygame.transform.scale(self.periodic_img, (500, 250))
-        self.periodic_rect = self.periodic_img.get_rect(center=(self.s_w/2, self.s_h/2 - 175))
+        self.periodic_img = pygame.transform.scale(self.periodic_img, (600, 300))
+        self.periodic_rect = self.periodic_img.get_rect(midbottom=(self.s_w/2, self.elements_rects[0][1].top))
 
         self.door_img = pygame.image.load("Images/door.png")
         self.door_img = pygame.transform.scale(self.door_img, (150, 300))
@@ -214,10 +214,10 @@ class ElementsRoom(DefaultRoom):
         for element in self.elements_rects:
             self.screen.blit(element[0], element[1])
 
+        self.screen.blit(self.periodic_img, self.periodic_rect)
         self.screen.blit(self.room_number_text, self.room_number_rect)
         self.screen.blit(self.back_txt, self.back_rect)
         self.screen.blit(self.lock_img, self.lock_rect)
-        self.screen.blit(self.periodic_img, self.periodic_rect)
 
         self.screen.blit(self.door_img, self.door_rect)
         self.screen.blit(self.barricade_img, self.barricade_rect)
