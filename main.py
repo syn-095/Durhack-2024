@@ -21,6 +21,8 @@ class Game:
         self.current_room = 1
 
         self.inventory = []
+        self.inv_crowbar_img = pygame.image.load('Images/Crowbar.png')
+        self.inv_crowbar_rect = self.inv_crowbar_img.get_rect(bottomright = (W, H))
 
     def update(self):
         room_variable = None
@@ -65,7 +67,7 @@ pygame.init()
 
 screen_info = pygame.display.Info()
 
-W, H = screen_info.current_w - 20, screen_info.current_h - 100
+W, H = screen_info.current_w - 20, screen_info.current_h - 120
 
 # screen = pygame.display.set_mode((0,0), pygame.FULLSCREEN) #=> fullscreen window
 screen = pygame.display.set_mode((W,H))
