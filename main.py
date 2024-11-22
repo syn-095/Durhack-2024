@@ -20,6 +20,8 @@ class Game:
 
         self.current_room = 1
 
+        self.inventory = []
+
     def update(self):
         room_variable = None
         sleep_time = 0.3
@@ -54,6 +56,8 @@ class Game:
 
         if room_variable == "back":  self.current_room -= 1
         if room_variable == "next": self.current_room += 1
+
+        if room_variable == "crowbar picked": self.inventory.append('crowbar')
 
 
 

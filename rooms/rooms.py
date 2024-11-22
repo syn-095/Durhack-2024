@@ -412,6 +412,7 @@ class WindowRoom(DefaultRoom):
         if self.crowbar_rect.collidepoint(pygame.mouse.get_pos()):
             if pygame.mouse.get_pressed()[0]:
                 self.crowbar_picked = True
+                return "crowbar picked"
 
         if self.window_rect.collidepoint(pygame.mouse.get_pos()):
             if pygame.mouse.get_pressed()[0] and self.crowbar_picked:
