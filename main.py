@@ -20,9 +20,10 @@ class Game:
 
         self.current_room = 1
 
-        self.inventory = []
+        self.inventory = ['crowbar']
         self.inv_crowbar_img = pygame.image.load('Images/Crowbar.png')
-        self.inv_crowbar_rect = self.inv_crowbar_img.get_rect(bottomright = (W, H))
+        self.inv_crowbar_img = pygame.transform.scale(self.inv_crowbar_img, (100, 100))
+        self.inv_crowbar_rect = self.inv_crowbar_img.get_rect(bottomright = (W - 20, H - 20))
 
     def update(self):
         room_variable = None
@@ -55,6 +56,13 @@ class Game:
         elif self.current_room == self.window_end_num:
             room_variable = self.window_end.update()
             if room_variable: time.sleep(sleep_time)
+
+        if len(self.inventory) != 0: 
+            if 'crowbar' in self.inventory:
+                pygame.draw.rect(screen, 'grey', self.inv_crowbar_rect, 0, 5)
+                pygame.draw.rect(screen, 'black', self.inv_crowbar_rect, 1, 5)
+                screen.blit(self.inv_crowbar_img, self.inv_crowbar_rect)
+
 
         if room_variable == "back":  self.current_room -= 1
         if room_variable == "next": self.current_room += 1
