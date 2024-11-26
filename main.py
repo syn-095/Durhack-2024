@@ -20,7 +20,7 @@ class Game:
 
         self.current_room = 1
 
-        self.inventory = ['crowbar']
+        self.inventory = []
         self.inv_crowbar_img = pygame.image.load('Images/Crowbar.png')
         self.inv_crowbar_img = pygame.transform.scale(self.inv_crowbar_img, (100, 100))
         self.inv_crowbar_rect = self.inv_crowbar_img.get_rect(bottomright = (W - 20, H - 20))
