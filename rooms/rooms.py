@@ -86,6 +86,7 @@ class Room1(Entrance):
 
         if self.back_rect.collidepoint(mouse_pos):
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_back, 0, 2)
+            if click: return "back"
 
     def draw(self):
         self.screen.blit(self.room_number_text, self.room_number_rect)
