@@ -1,6 +1,6 @@
 import pygame, sys, time
 from pygame.math import Vector2
-from rooms import rooms
+import rooms
 
 class Game:
     def __init__(self) -> None:

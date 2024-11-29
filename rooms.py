@@ -1,5 +1,8 @@
 import pygame, time
-import keypad
+try:
+    import keypad
+except Exception as e:
+    print ('keypad module not in folder')
 
 class DefaultRoom: # Parent class for rooms
     def __init__(self, screen, s_width, s_height, room_name : str, no_room_display = False, no_room_back = False, no_next_room = False):
