@@ -177,7 +177,7 @@ class ElementsRoom(DefaultRoom):
         self.lock_img = pygame.transform.scale(self.lock_img, (50, 50))
         self.lock_rect = self.lock_img.get_rect(center=(self.s_w/2, self.s_h/2 + 75))
 
-        self.keypad = keypad.Keypad((self.s_w/2 - 45, self.s_h*2/3 + 20), 100, 100, self.screen)
+        self.keypad = keypad.Keypad((self.s_w/2 - 50, self.s_h*2/3 + 20), 100, 100, self.screen)
 
         self.periodic_img = pygame.image.load("Images/periodic_table.jpg")
         self.periodic_img = pygame.transform.scale(self.periodic_img, (600, 300))
@@ -443,3 +443,6 @@ class Window_end(DefaultRoom):
     def update(self):
         self.draw()
 
+
+if __name__ == '__main__':
+    print ('please run main file to play the game')
