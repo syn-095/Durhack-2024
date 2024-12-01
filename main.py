@@ -18,6 +18,8 @@ class Game:
         self.window_room_num = 6
         self.window_end_num = self.window_room_num + 1
 
+        self.white_room_entered = False
+
         self.current_room = 1
 
         self.inventory = []
@@ -30,7 +32,7 @@ class Game:
         sleep_time = 0.3
 
         if self.current_room == 1:
-            room_variable = self.entrance.update()
+            room_variable = self.entrance.update(self.white_room_entered)
             if room_variable: time.sleep(sleep_time)
 
         elif self.current_room == 2: 
@@ -38,6 +40,7 @@ class Game:
             if room_variable: time.sleep(sleep_time)
 
         elif self.current_room == self.white_room_num:
+            self.white_room_entered = True
             room_variable = self.white_room.update()
             if room_variable: time.sleep(sleep_time)
 

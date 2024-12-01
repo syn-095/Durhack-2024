@@ -1,8 +1,8 @@
-import pygame, time
 try:
+    import pygame, time
     import keypad
 except Exception as e:
-    print ('keypad module not in folder')
+    print ('one or more modules not available')
 
 class DefaultRoom: # Parent class for rooms
     def __init__(self, screen, s_width, s_height, room_name : str, no_room_display = False, no_room_back = False, no_next_room = False):
@@ -38,29 +38,61 @@ class Entrance(DefaultRoom):
     def __init__(self, screen, s_width, s_height) -> None:
         super().__init__(screen, s_width, s_height, "ENTRANCE")
 
-        # self.nxt_room_txt = self.font.render("NEXT ROOM", True, 'black')
+        self.nxt_room_txt = self.font.render("NEXT ROOM", True, 'black')
         # self.nxt_room_rect = self.nxt_room_txt.get_rect()
         # self.nxt_room_rect.midbottom = (s_width/2, self.s_h/2)  
 
         # self.hover_rect = pygame.Rect(0,0,self.nxt_room_rect.width + 5, self.nxt_room_rect.height + 5)
         # self.hover_rect.center = self.nxt_room_rect.center
 
-    def hover_effect(self):
+        # ROOM 1 TEXT --------------
+        self.room1_txt = self.font.render("ROOM 1", True, 'black')
+        self.room1_rect = self.room1_txt.get_rect()
+        self.room1_rect.midbottom = (s_width/2, self.s_h/2) 
+
+        self.room1_hover_rect = pygame.Rect(0,0,self.room1_rect.width + 5, self.room1_rect.height + 5)
+        self.room1_hover_rect.center = self.room1_rect.center
+        # -------
+
+        # ROOM 1 BIS ------------------
+        self.room1bis_txt = self.font.render("ROOM 1 BIS", True, 'black')
+        self.room1bis_rect = self.room1bis_txt.get_rect()
+        self.room1bis_rect.midtop = (s_width/2, self.s_h/2)
+
+        self.room1bis_hover_rect = pygame.Rect(0,0,self.room1bis_rect.width + 5, self.room1bis_rect.height + 5)
+        self.room1bis_hover_rect.center = self.room1bis_rect.center
+        # ---------
+
+    def hover_effect(self, room_unlocked):
         mouse_pos = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()[0]
 
-        if self.nxt_room_rect.collidepoint(mouse_pos):
+        if self.nxt_room_rect.collidepoint(mouse_pos) and not room_unlocked:
             pygame.draw.rect(self.screen, 'grey', self.hover_rect_next, 0, 2)
             if click: 
                 return "next"
+            
 
-    def draw(self):
+        if self.room1_rect.collidepoint(mouse_pos) and room_unlocked:
+            pygame.draw.rect(self.screen, 'grey', self.room1_hover_rect, 0, 2)
+            if click: 
+                return "room 1"
+            
+        if self.room1bis_rect.collidepoint(mouse_pos) and room_unlocked:
+            pygame.draw.rect(self.screen, 'grey', self.room1bis_hover_rect, 0, 2)
+            if click: 
+                return "room 1 bis"
+
+    def draw(self, room_unlocked):
         self.screen.blit(self.room_number_text, self.room_number_rect)
-        self.screen.blit(self.nxt_room_txt, self.nxt_room_rect)
+        if not room_unlocked: self.screen.blit(self.nxt_room_txt, self.nxt_room_rect)
+        else: 
+            self.screen.blit(self.room1_txt, self.room1_rect)
+            self.screen.blit(self.room1bis_txt, self.room1bis_rect)
 
-    def update(self):
-        exit=self.hover_effect()
-        self.draw()
+    def update(self, room_unlocked):
+        exit=self.hover_effect(room_unlocked)
+        self.draw(room_unlocked)
 
         return exit
 
@@ -445,6 +477,10 @@ class Window_end(DefaultRoom):
 
     def update(self):
         self.draw()
+
+class Room1bis(DefaultRoom):
+    def __init__(self, screen, s_width, s_height, room_name: str, no_room_display=False, no_room_back=False, no_next_room=False):
+        super().__init__(screen, s_width, s_height, room_name, no_room_display, no_room_back, no_next_room)
 
 
 if __name__ == '__main__':
