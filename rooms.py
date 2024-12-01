@@ -48,16 +48,16 @@ class Entrance(DefaultRoom):
         # ROOM 1 TEXT --------------
         self.room1_txt = self.font.render("ROOM 1", True, 'black')
         self.room1_rect = self.room1_txt.get_rect()
-        self.room1_rect.midbottom = (s_width/2, self.s_h/2) 
+        self.room1_rect.midbottom = (s_width/2, self.s_h/2 - 20) 
 
         self.room1_hover_rect = pygame.Rect(0,0,self.room1_rect.width + 5, self.room1_rect.height + 5)
         self.room1_hover_rect.center = self.room1_rect.center
         # -------
 
         # ROOM 1 BIS ------------------
-        self.room1bis_txt = self.font.render("ROOM 1 BIS", True, 'black')
+        self.room1bis_txt = self.font.render("ROOM 1(bis)", True, 'black')
         self.room1bis_rect = self.room1bis_txt.get_rect()
-        self.room1bis_rect.midtop = (s_width/2, self.s_h/2)
+        self.room1bis_rect.midtop = (s_width/2, self.s_h/2 + 20)
 
         self.room1bis_hover_rect = pygame.Rect(0,0,self.room1bis_rect.width + 5, self.room1bis_rect.height + 5)
         self.room1bis_hover_rect.center = self.room1bis_rect.center

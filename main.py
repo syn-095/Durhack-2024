@@ -12,6 +12,9 @@ class Game:
         self.window_room = rooms.WindowRoom(screen, W, H, "100")
         self.window_end = rooms.Window_end(screen, W, H)
 
+        self.entrance_num = 1
+        self.room_1_num = 2
+        self.room_1bis_num = 2.5
         self.white_room_num = 3
         self.elements_room_num = 4
         self.key_room_num = 5
@@ -31,11 +34,11 @@ class Game:
         room_variable = None
         sleep_time = 0.3
 
-        if self.current_room == 1:
+        if self.current_room == self.entrance_num:
             room_variable = self.entrance.update(self.white_room_entered)
             if room_variable: time.sleep(sleep_time)
 
-        elif self.current_room == 2: 
+        elif self.current_room == self.room_1_num: 
             room_variable = self.room_1.update()
             if room_variable: time.sleep(sleep_time)
 
@@ -66,9 +69,11 @@ class Game:
                 pygame.draw.rect(screen, 'black', self.inv_crowbar_rect, 1, 5)
                 screen.blit(self.inv_crowbar_img, self.inv_crowbar_rect)
 
-
         if room_variable == "back":  self.current_room -= 1
         if room_variable == "next": self.current_room += 1
+
+        if room_variable == "room 1": self.current_room = self.room_1_num
+        if room_variable == "room 1 bis": self.current_room = self.room_1bis_num
 
         if room_variable == "crowbar picked": self.inventory.append('crowbar')
 
