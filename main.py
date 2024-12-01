@@ -4,26 +4,28 @@ import rooms
 
 class Game:
     def __init__(self) -> None:
+        self.entrance_num = 0
+        self.room_1_num = 1
+        self.room_1bis_num = 1.5
+        self.white_room_num = 2
+        self.elements_room_num = 3
+        self.key_room_num = 4
+        self.window_room_num = 5
+        self.window_end_num = self.window_room_num + 1
+
+        self.white_room_entered = False
+
+        self.current_room = 0
+
+        
         self.entrance = rooms.Entrance(screen, W, H)
         self.room_1 = rooms.Room1(screen, W, H)
+        self.room_1bis = rooms.Room1bis(screen, W, H, self.room_1bis_num - self.entrance_num)
         self.white_room = rooms.WhiteRoom(screen, W, H)
         self.elements_room = rooms.ElementsRoom(screen, W, H, "002")
         self.key_room = rooms.KeyRoom(screen, W, H)
         self.window_room = rooms.WindowRoom(screen, W, H, "100")
         self.window_end = rooms.Window_end(screen, W, H)
-
-        self.entrance_num = 1
-        self.room_1_num = 2
-        self.room_1bis_num = 2.5
-        self.white_room_num = 3
-        self.elements_room_num = 4
-        self.key_room_num = 5
-        self.window_room_num = 6
-        self.window_end_num = self.window_room_num + 1
-
-        self.white_room_entered = False
-
-        self.current_room = 1
 
         self.inventory = []
         self.inv_crowbar_img = pygame.image.load('Images/Crowbar.png')
@@ -40,6 +42,11 @@ class Game:
 
         elif self.current_room == self.room_1_num: 
             room_variable = self.room_1.update()
+            if room_variable: time.sleep(sleep_time)
+
+        elif self.current_room == self.room_1bis_num:
+            room_variable = self.room_1bis.update()
+            print (f'room variable: {room_variable}')
             if room_variable: time.sleep(sleep_time)
 
         elif self.current_room == self.white_room_num:
@@ -69,13 +76,20 @@ class Game:
                 pygame.draw.rect(screen, 'black', self.inv_crowbar_rect, 1, 5)
                 screen.blit(self.inv_crowbar_img, self.inv_crowbar_rect)
 
-        if room_variable == "back":  self.current_room -= 1
+        if room_variable == "back": self.current_room -= 1
         if room_variable == "next": self.current_room += 1
+
+
+        if type(room_variable) == list and room_variable[0] == 'back': 
+            print ('going back')
+            self.current_room -= room_variable[1]
 
         if room_variable == "room 1": self.current_room = self.room_1_num
         if room_variable == "room 1 bis": self.current_room = self.room_1bis_num
 
         if room_variable == "crowbar picked": self.inventory.append('crowbar')
+
+        print (room_variable, self.current_room)
 
 
 

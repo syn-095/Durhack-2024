@@ -479,8 +479,30 @@ class Window_end(DefaultRoom):
         self.draw()
 
 class Room1bis(DefaultRoom):
-    def __init__(self, screen, s_width, s_height, room_name: str, no_room_display=False, no_room_back=False, no_next_room=False):
-        super().__init__(screen, s_width, s_height, room_name, no_room_display, no_room_back, no_next_room)
+    def __init__(self, screen, s_width, s_height, difference_to_entrance, no_room_display=True, no_room_back=False, no_next_room=False):
+        super().__init__(screen, s_width, s_height, no_room_display, no_room_back, no_next_room)
+
+        self.dif_to_entrance = difference_to_entrance
+
+    def hover_effect(self):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()[0]
+
+        if self.back_rect.collidepoint(mouse):
+            pygame.draw.rect(self.screen, 'grey', self.back_rect_hover)
+            if click: 
+                print ('going back')
+                return ['back', self.dif_to_entrance]
+
+
+    def draw(self):
+        self.screen.blit(self.back_txt, self.back_rect)
+
+    def update(self):
+        room_variable = self.hover_effect()
+        self.draw()
+
+        return room_variable
 
 
 if __name__ == '__main__':
