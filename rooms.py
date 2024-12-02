@@ -1,5 +1,5 @@
 try:
-    import pygame, time
+    import pygame, time, random
     import keypad
 except Exception as e:
     print ('one or more modules not available')
@@ -479,27 +479,199 @@ class Window_end(DefaultRoom):
         self.draw()
 
 class Room1bis(DefaultRoom):
-    def __init__(self, screen, s_width, s_height, difference_to_entrance, no_room_display=True, no_room_back=False, no_next_room=False):
+    def __init__(self, screen, s_width, s_height, difference_to_entrance, difference_to_elements_room, no_room_display=True, no_room_back=False, no_next_room=False):
         super().__init__(screen, s_width, s_height, no_room_display, no_room_back, no_next_room)
 
-        self.dif_to_entrance = difference_to_entrance
+        # LIGHT FUNCTIONS
+        # N -> changes states of all letters except itself
+        # E -> changes state of itself + neighbours
+        # X -> if N is lit, changes state of even letters, odd if not
+        # T -> permutes state of E and R 
+        # R -> changes state of a completely random letter
+        # O -> if NEXT is all lit up, lights up all of ROOM, if not turns off all of NEXT
+        # O -> if more than 1 letter is yet to be lit, lights up first unlit letter from left, if not unlights every letter
+        # M -> lights/unlights itself
 
-    def hover_effect(self):
+        self.dif_to_entrance = difference_to_entrance
+        self.dif_to_elements = difference_to_elements_room
+
+        self.letters = ['N','E','X','T','','R','O','O','M']
+        self.letter_rects = []
+
+        for index, letter in enumerate(self.letters):
+            letter_txt = self.font.render(letter, True, 'grey')
+            letter_rect = letter_txt.get_rect(center = (self.s_w/3 + 70*index, self.s_h/2))
+            lit = False
+            timeout = False
+            self.letter_rects.append([letter_txt, letter_rect, lit, timeout])
+
+        self.all_lit = False
+
+        hover_rect_w = self.letter_rects[8][1].right - self.letter_rects[0][1].left
+        self.hover_rect_next = pygame.Rect(self.letter_rects[0][1].left - 5, self.letter_rects[8][1].top - 5, hover_rect_w + 10, self.letter_rects[0][1].height + 10)
+
+    def interactions(self):
         mouse = pygame.mouse.get_pos()
         click = pygame.mouse.get_pressed()[0]
 
         if self.back_rect.collidepoint(mouse):
             pygame.draw.rect(self.screen, 'grey', self.back_rect_hover)
-            if click: 
-                print ('going back')
-                return ['back', self.dif_to_entrance]
+            if click: return ['back', self.dif_to_entrance]
+
+        def check_all_lit_letters():
+            lit_letters = []
+            for index, rect in enumerate(self.letter_rects):
+                if rect[2] and index != 4: lit_letters.append(rect[1])
+            
+            if len(lit_letters) == len(self.letter_rects) - 1:
+                self.all_lit = True
+                return True
+            else: 
+                self.all_lit = False
+                return False
+
+
+        # LIGHTING UP LETTERS
+        if not check_all_lit_letters():
+            for index, rect in enumerate(self.letter_rects):
+                if rect[1].collidepoint(mouse):
+
+                    if index == 0 and click and not rect[3]:
+                        for i, l in enumerate(self.letter_rects):
+                            if i != 0:
+                                l[2] = not l[2]
+                                colour = 'yellow' if l[2] else 'grey'
+                                l[0] = self.font.render(self.letters[i], True, colour)
+
+                        rect[3] = True
+
+                    elif index == 1 and click and not rect[3]:
+                        self.letter_rects[index-1][2] = not self.letter_rects[index-1][2]
+                        colour = 'yellow' if self.letter_rects[index-1][2] else 'grey'
+                        self.letter_rects[index-1][0] = self.font.render(self.letters[index - 1], True, colour)
+
+                        self.letter_rects[index][2] = not self.letter_rects[index][2]
+                        colour = 'yellow' if self.letter_rects[index][2] else 'grey'
+                        self.letter_rects[index][0] = self.font.render(self.letters[index], True, colour)
+
+                        self.letter_rects[index+1][2] = not self.letter_rects[index+1][2]
+                        colour = 'yellow' if self.letter_rects[index+1][2] else 'grey'
+                        self.letter_rects[index+1][0] = self.font.render(self.letters[index+1], True, colour)
+
+                        rect[3] = True
+
+                    elif index == 2 and click and not rect[3]:
+                        if self.letter_rects[0][2]:
+                            for i, l in enumerate(self.letter_rects):
+                                if i%2 == 0:
+                                    l[2] = not l[2]
+                                    colour = 'yellow' if l[2] else 'grey'
+                                    l[0] = self.font.render(self.letters[i], True, colour)
+                        else:
+                            for i, l in enumerate(self.letter_rects):
+                                if i%2 != 0:
+                                    l[2] = not l[2]
+                                    colour = 'yellow' if l[2] else 'grey'
+                                    l[0] = self.font.render(self.letters[i], True, colour)
+
+                        rect[3] = True
+                    
+                    elif index == 3 and click and not rect[3]:
+
+                        e_state = self.letter_rects[1][2]
+                        r_state = self.letter_rects[5][2]
+                        
+                        self.letter_rects[1][2] = r_state
+                        colour = 'yellow' if r_state else 'grey'
+                        self.letter_rects[1][0] = self.font.render(self.letters[1], True, colour)
+
+                        self.letter_rects[5][2] = e_state
+                        colour = 'yellow' if e_state else 'grey'
+                        self.letter_rects[5][0] = self.font.render(self.letters[5], True, colour)
+
+                        rect[3] = True
+                    
+                    elif index == 5 and click and not rect[3]:
+                        letter_index = random.randint(0,len(self.letters) - 2)
+                        if letter_index >= 4: letter_index += 1
+
+                        self.letter_rects[letter_index][2] = not self.letter_rects[letter_index][2]
+                        colour = 'yellow' if self.letter_rects[letter_index][2] else 'grey'
+                        self.letter_rects[letter_index][0] = self.font.render(self.letters[letter_index], True, colour)
+
+                        rect[3] = True
+
+                    elif index == 6 and click and not rect[3]:
+                        if self.letter_rects[0][2] and self.letter_rects[1][2] and self.letter_rects[2][2] and self.letter_rects[3][2]:
+                            for i, l in enumerate(self.letter_rects):
+                                if i > 4: 
+                                    l[2] = True
+                                    l[0] = self.font.render(self.letters[i], True, 'yellow')
+                        
+                        else:
+                            for i, l in enumerate(self.letter_rects):
+                                if i < 4: 
+                                    l[2] = False
+                                    l[0] = self.font.render(self.letters[i], True, 'grey')
+                        
+                        rect[3] = True
+
+                    elif index == 7 and click and not rect[3]:
+                        unlit_letters = []
+                        for i, l in enumerate(self.letter_rects):
+                            if not l[2] and i != 4: unlit_letters.append(i)
+                        
+                        print (len(unlit_letters))
+
+                        if len(unlit_letters) >= 2:
+                            self.letter_rects[unlit_letters[0]][2] = True
+                            self.letter_rects[unlit_letters[0]][0] = self.font.render(self.letters[unlit_letters[0]], True, 'yellow')
+                        else:
+                            for i, l in enumerate(self.letter_rects):
+                                l[2] = False
+                                l[0] = self.font.render(self.letters[i], True, 'grey')  
+
+                        rect[3] = True
+
+                    elif index == 8:
+                        if click and rect[2] and not rect[3]: 
+                            rect[0] = self.font.render(self.letters[index], True, 'grey')  
+                            rect[2] = False
+                            rect[3] = True
+                        elif click and not rect[2] and not rect[3]:
+                            rect[0] = self.font.render(self.letters[index], True, 'yellow')
+                            rect[2] = True
+                            rect[3] = True
+
+                    elif not click:
+                        rect[3] = False 
+        # ----
+        elif self.all_lit:
+            no_clicks = True
+            for i, l in enumerate(self.letter_rects):
+                if l[3]: no_clicks = False
+            
+            if self.hover_rect_next.collidepoint(mouse) and click and no_clicks:
+                return ['next', self.dif_to_elements]
+            
+            for i, l in enumerate(self.letter_rects):
+                l[3] = False
+        # Checking if all letters are lit up & toggling button accordingly
 
 
     def draw(self):
         self.screen.blit(self.back_txt, self.back_rect)
 
+        if self.all_lit:
+            pygame.draw.rect(self.screen, 'grey', self.hover_rect_next)
+
+        for rect in self.letter_rects:
+            self.screen.blit(rect[0], rect[1])
+
+
     def update(self):
-        room_variable = self.hover_effect()
+        room_variable = self.interactions()
+
         self.draw()
 
         return room_variable
