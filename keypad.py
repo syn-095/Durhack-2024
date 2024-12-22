@@ -10,7 +10,7 @@ class Keypad:
             ['1', '2', '3'],
             ['4', '5', '6'],
             ['7', '8', '9'],
-            ['CE', '0', 'B']  # CE: Clear, C: backspace
+            ['CE', '0', 'B']  # CE: Clear, B: backspace
         ]
         self.font = pygame.font.SysFont("Arial", 30)
         self.pressed_keys = ""
@@ -85,17 +85,19 @@ class Keypad:
 
         if pygame.mouse.get_pressed()[0]:
             for key, rect in self.key_rects:
-                    if rect.collidepoint(pygame.mouse.get_pos()):
-                        if key == 'CE':
-                            self.pressed_keys = ""
-                        if key == 'B':
-                            key_list = [key for key in self.pressed_keys]
-                            key_list = key_list[0:-1]
-                            self.pressed_keys = ""
-                            for key in key_list: self.pressed_keys += key
-                        else:
-                            self.pressed_keys += key
-                        time.sleep(sleep_time)
+                if rect.collidepoint(pygame.mouse.get_pos()):
+                    if key == "CE":
+                        self.pressed_keys = ""
+                    elif key == 'B':
+                        self.pressed_keys = self.pressed_keys[:-1]
+                        # key_list = [key for key in self.pressed_keys]
+                        # key_list = key_list[0:-1]
+                        # self.pressed_keys = ""
+                        # for key in key_list: self.pressed_keys += key
+                    else:
+                        print (key)
+                        self.pressed_keys += key
+                    time.sleep(sleep_time)
                         
         return self.pressed_keys
 
