@@ -439,23 +439,31 @@ class WindowRoom(DefaultRoom):
         self.window_rect = self.window_img.get_rect(center = (self.s_w/2, self.s_h/2 - 200))
 
         self.crowbar_img = pygame.image.load("Images/Crowbar.png")
-        self.crowbar_img = pygame.transform.scale(self.crowbar_img, (300, 300))
-        self.crowbar_rect = self.crowbar_img.get_rect(midbottom = (self.s_w/2, self.s_h))
+        self.crowbar_img = pygame.transform.scale(self.crowbar_img, (30, 30))
+        self.crowbar_rect = self.crowbar_img.get_rect(center = (self.s_w/2, self.s_h*2/3))
 
         self.crowbar_picked = False
 
     def hover(self):
-        if self.crowbar_rect.collidepoint(pygame.mouse.get_pos()):
+        mouse = pygame.mouse.get_pos()
+        click = pygame.mouse.get_pressed()[0]
+
+        if self.crowbar_rect.collidepoint(mouse):
             if pygame.mouse.get_pressed()[0]:
                 self.crowbar_picked = True
                 return "crowbar picked"
 
-        if self.window_rect.collidepoint(pygame.mouse.get_pos()):
+        if self.window_rect.collidepoint(mouse):
             if pygame.mouse.get_pressed()[0] and self.crowbar_picked:
                 return "next"
+            
+        if self.back_rect.collidepoint(mouse):
+            pygame.draw.rect(self.screen, 'grey', self.back_rect_hover)
+            if click: return 'back'
 
     def draw(self):
         self.screen.blit(self.window_img, self.window_rect)
+        self.screen.blit(self.back_txt, self.back_rect)
         if not self.crowbar_picked: self.screen.blit(self.crowbar_img, self.crowbar_rect)
 
 

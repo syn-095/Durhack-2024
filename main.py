@@ -15,7 +15,7 @@ class Game:
 
         self.white_room_entered = False
 
-        self.current_room = 1.5
+        self.current_room = 0
 
 
         self.entrance = rooms.Entrance(screen, W, H)
